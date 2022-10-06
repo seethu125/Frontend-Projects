@@ -14,7 +14,7 @@ function Login() {
             // maybe trigger a loading screen
             return;
         }
-        if (user) navigate("/home");
+        if (user) navigate("/addProduct");
     }, [user, loading]);
     return (
         <div className="login">
