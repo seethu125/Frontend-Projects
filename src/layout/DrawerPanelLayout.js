@@ -20,6 +20,8 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase';
 
 const drawerWidth = 240;
 
@@ -73,6 +75,8 @@ export default function DrawerPanelLayout({children}) {
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
 
+    const [user, loading, error] = useAuthState(auth);
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -82,12 +86,17 @@ export default function DrawerPanelLayout({children}) {
     };
 
     const navigateToPage = (pageUrl) => {
+        debugger;
+        const new_user = user;
         switch (pageUrl) {
             case "Home":
                 navigate("/Home")
                 return;
             case "Add Product":
                 navigate("/addProduct")
+                return;
+            case "Product Catalog":
+                navigate("/listProduct")
                 return;
             default:
                 navigate("/")
@@ -112,7 +121,7 @@ export default function DrawerPanelLayout({children}) {
                     <Typography variant="h6" noWrap component="div">
                         Product Catalog
                     </Typography>
-                    <Button onClick={navigateToPage}>Login</Button>
+                    <Button onClick={navigateToPage}>{user ? user.displayName:'Login'}</Button>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -135,7 +144,7 @@ export default function DrawerPanelLayout({children}) {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {['Home', 'Add Product', 'logout'].map((text, index) => (
+                    {['Home', 'Add Product','Product Catalog', 'logout'].map((text, index) => (
                         <ListItem key={text} disablePadding>
                             <ListItemButton onClick={()=> navigateToPage(text)}>
                                 <ListItemIcon>
